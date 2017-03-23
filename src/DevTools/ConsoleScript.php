@@ -32,7 +32,12 @@ if(ini_get("phar.readonly") == 1){
 
 $makePaths = explode(",", $opts["make"]);
 array_walk($makePaths, function(&$path, $key){
-	$path = rtrim(str_replace("\\", "/", realpath($path)), "/") . "/";
+	$realPath = realpath($path);
+	if($realPath === false){
+		echo "[ERROR] make directory `$path` does not exist or permission denied" . PHP_EOL;
+		exit(1);
+	}
+	$path = rtrim(str_replace("\\", "/", $realPath), "/") . "/";
 });
 
 $relativePath = "";
